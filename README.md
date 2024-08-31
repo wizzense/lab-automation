@@ -2,7 +2,12 @@
 
 to-do:
 
-setup github repo for maintaining all of this information, files, code, and instructions for deployment.
+Automate setup of github repo for maintaining all of this information, files, code, and instructions for deployment.
+
+- automate download and install git
+- automate download and install vscode
+- create / clone repo
+- use config files for username/email/repo/clone path
 
 Painstaklingly document everything
 Painstakingly automate everything.
@@ -20,6 +25,11 @@ Wishlist
 - The primary purpose is for it to be your control node for the deploying your lab useing Provision from Tanium Cloud. We do not need it to be running an available all the time, only when we want to re-provision our baremetal DOM or lab hardware. We will take care to automate every possible piece, from preparing an image, uploading the image to Tanium, creating a control node VM, instaling the Tanium Client, creating a satellite, creating a provision bundle, (leverage API) and deploying it from the satellite VM to the DOM/ lab hardware, which will then be Windows Server w/ Hyper-V, install Tanium, use automat/deploy/ ETC to copy .exes/.isos/local tooling and scripts for automating VM deployments (automate VM deployment of TanOS (look into using shell scripts for auto configuration fo TanOS and installation of Tanium Server) and use custom tags with packages that run the scripts/tooling that configures the VMs) Automate Domain Controller, pfsense, aTanium, and test endpoints on lab hardware.
 
 Automate installation and configuration of hyper-v on Primary PC and Work PC
+
+automate download of common OS ISOs 
+automate configuration of VMs
+
+- use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
 
 automate creation of control node VM.
 
