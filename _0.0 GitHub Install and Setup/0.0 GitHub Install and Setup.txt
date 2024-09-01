@@ -1,0 +1,66 @@
+Step 1: Install Git on Your Windows PC
+Before you can use GitHub with VSCode, you need to have Git installed on your computer.
+
+Download Git:
+
+Go to the Git official website and download the latest version for Windows.
+Run the installer. During installation, you can keep the default settings, but ensure that “Git from the command line and also from 3rd-party software” is selected.
+Verify Git Installation:
+
+Open a command prompt (cmd) or PowerShell window.
+Type git --version and press Enter. You should see the installed version of Git.
+Step 2: Create a GitHub Account (If You Don’t Have One)
+Sign up for GitHub:
+Go to GitHub and create an account if you don’t already have one.
+Verify your email address to activate your account.
+Step 3: Set Up a New Repository on GitHub
+Create a New Repository:
+Log in to your GitHub account.
+Click the + icon in the top-right corner and select New repository.
+Name your repository (e.g., tanium-homelab-automation), and add a description if desired.
+Choose the repository to be either Public or Private.
+Optionally, initialize the repository with a README file (you can add it later as well).
+Click Create repository.
+Step 4: Set Up VSCode for GitHub
+Install VSCode (if you haven’t already):
+
+Download and install VSCode from the official website.
+Install the GitHub Extension for VSCode:
+
+Open VSCode.
+Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window or press Ctrl+Shift+X.
+Search for "GitHub Pull Requests and Issues" and install it.
+You might also want to install the "GitLens — Git supercharged" extension for enhanced Git functionality.
+Clone Your GitHub Repository:
+
+Open VSCode.
+Open the Command Palette (Ctrl+Shift+P) and type Git: Clone.
+Paste the URL of your GitHub repository (you can find this URL on your repository’s GitHub page by clicking the green Code button).
+Select a local directory where you want to clone the repository.
+Configure Git in VSCode:
+
+If prompted, set your Git username and email:
+bash
+Copy code
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
+These commands set your identity for Git commits.
+Step 5: Add Project Files to the Repository
+Create or Add Files:
+
+Within VSCode, you can now create new files or folders in your cloned repository.
+Start adding your project files, such as scripts, configuration files, documentation, etc.
+Stage and Commit Your Changes:
+
+Open the Source Control view by clicking on the Source Control icon in the Activity Bar or press Ctrl+Shift+G.
+You will see a list of changes. Stage the files you want to commit by clicking the + icon next to each file or by clicking Stage All Changes.
+Enter a commit message in the message box and click the checkmark icon to commit your changes.
+Push Changes to GitHub:
+
+Click the ellipsis (...) in the Source Control view and select Push to send your committed changes to the GitHub repository.
+Step 6: Manage Your Repository
+Create Branches: Use branches to work on different features or sections of your project separately. You can create a branch by typing git checkout -b branch-name in the terminal or by using the branch icon in VSCode.
+Pull Requests: When you’re ready to merge changes from one branch to another, you can create a pull request directly from GitHub.
+Additional Notes
+Backup Your Repo: Since this project is critical, ensure that you regularly push your changes to GitHub to keep your work backed up.
+Collaborate: If you’re working with others, GitHub is great for collaboration. You can add collaborators to your repository from the settings on GitHub.
