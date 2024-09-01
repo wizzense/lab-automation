@@ -1,0 +1,13 @@
+{
+    "GitInstallerUrl":  "https://github.com/git-for-windows/git/releases/download/v2.46.0.windows.1/Git-2.46.0-64-bit.exe",
+    "GitUsername":  "YourGitHubUsername",
+    "GitEmail":  "your-email@example.com",
+    "VSCodeInstallerUrl":  "https://aka.ms/win32-x64-user-stable",
+    "VSCodeExtensions":  [
+                             "GitHub.vscode-pull-request-github",
+                             "eamodio.gitlens",
+                             "Codeium.codeium"
+                         ],
+    "RepoUrl":  "https://github.com/wizzense/tanium-homelab-automation",
+    "LocalPath":  "C:\Users\alexa\OneDrive\0. Lab\"
+}

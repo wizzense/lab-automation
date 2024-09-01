@@ -1,15 +1,23 @@
 # Tanium Deployed Homelab
 
+## Most Recent Thoughts and Ideas at the Top
+
+Include config file for like my preferred programs and configs for my personal pc and work PC.
+
 to-do:
 
 Automate setup of github repo for maintaining all of this information, files, code, and instructions for deployment.
 
-- ~~automate download and install git~~ - Done
-- ~~automate download and install vscode~~ - Done
-- ~~automate download and install of git CLI~~
-- ~~automate create / clone repo~~ - Done
-- ~~use config files for username/email/repo/clone path~~ - done
-- automate git management
+- automate download and install git - Done
+- automate download and install vscode - Done
+- create / clone repo - Done
+- use config files for username/email/repo/clone path - Done
+
+### Document creating github private api token and using for this
+
+as above
+
+---
 
 Painstaklingly document everything
 Painstakingly automate everything.
