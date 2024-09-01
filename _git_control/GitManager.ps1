@@ -69,7 +69,16 @@ if ($branchExists) {
     Write-Host "Branch '$BranchName' created and checked out."
 }
 
-# Step 2: Stage all changes
+# Step 2: Pull the latest changes from 'main' into 'dev-branch'
+Write-Host "Pulling latest changes from 'main' into '$BranchName'..."
+git.exe pull origin main
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: Failed to pull latest changes from 'main' into '$BranchName'."
+    exit 1
+}
+Write-Host "Successfully pulled the latest changes from 'main' into '$BranchName'."
+
+# Step 3: Stage all changes
 git.exe add .
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to stage changes."
@@ -77,7 +86,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "All changes staged."
 
-# Step 3: Commit changes
+# Step 4: Commit changes
 git.exe commit -m $CommitMessage
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to commit changes."
@@ -85,16 +94,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Changes committed with message: '$CommitMessage'."
 
-# Step 4: Pull the latest changes from the remote branch
-Write-Host "Pulling latest changes from the remote branch '$BranchName'..."
-git.exe pull origin $BranchName
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Error: Failed to pull latest changes from remote branch '$BranchName'."
-    exit 1
-}
-Write-Host "Successfully pulled the latest changes."
-
-# Step 5: Push branch to remote repository
+# Step 5: Push 'dev-branch' to remote repository
 Write-Host "Pushing branch '$BranchName' to remote repository..."
 git.exe push origin $BranchName
 if ($LASTEXITCODE -ne 0) {
@@ -103,7 +103,20 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Branch '$BranchName' pushed to origin."
 
-# Step 6: Merge the branch into main if requested
+# Step 6: Create a pull request using GitHub CLI
+try {
+    gh pr create --title "$CommitMessage" --body "Automated PR for branch '$BranchName'" --base main --head $BranchName
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "Pull request created successfully for branch '$BranchName'."
+    } else {
+        Write-Host "Error: Failed to create pull request."
+    }
+} catch {
+    Write-Host "Error: GitHub CLI (gh) command failed. Ensure GitHub CLI is installed and authenticated."
+    exit 1
+}
+
+# Step 7: Merge the branch into main if requested
 if ($MergeToMain) {
     try {
         # Checkout the main branch
@@ -139,6 +152,15 @@ if ($MergeToMain) {
             exit 1
         }
         Write-Host "Pushed the 'main' branch to origin."
+
+        # Optionally, push the updated dev-branch as well to ensure both are in sync
+        Write-Host "Pushing updated '$BranchName' branch to remote repository..."
+        git.exe push origin $BranchName
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to push updated branch '$BranchName' to origin."
+            exit 1
+        }
+        Write-Host "Pushed the updated '$BranchName' branch to origin."
     } catch {
         Write-Host "Error: An issue occurred during the merge process."
         exit 1
@@ -146,34 +168,5 @@ if ($MergeToMain) {
 }
 
 
-# Step 7: Merge the branch into main if requested
-if ($MergeToMain) {
-    try {
-        # Checkout the main branch
-        git.exe checkout main
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: Failed to checkout the 'main' branch."
-            exit 1
-        }
-        Write-Host "Checked out 'main' branch."
-
-        # Merge the dev branch into main
-        git.exe merge $BranchName
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: Merge failed."
-            exit 1
-        }
-        Write-Host "Merged '$BranchName' into 'main'."
-
-        # Push the merged main branch to the remote repository
-        git.exe push origin main
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: Failed to push the 'main' branch to origin."
-            exit 1
-        }
-        Write-Host "Pushed the 'main' branch to origin."
-    } catch {
-        Write-Host "Error: An issue occurred during the merge process."
-        exit 1
-    }
-}
+#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
+#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation" -MergeToMain
