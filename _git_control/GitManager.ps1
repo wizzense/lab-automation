@@ -85,7 +85,17 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Changes committed with message: '$CommitMessage'."
 
-# Step 4: Push branch to remote repository
+# Step 4: Pull the latest changes from the remote branch
+Write-Host "Pulling latest changes from the remote branch '$BranchName'..."
+git.exe pull origin $BranchName
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Error: Failed to pull latest changes from remote branch '$BranchName'."
+    exit 1
+}
+Write-Host "Successfully pulled the latest changes."
+
+# Step 5: Push branch to remote repository
+Write-Host "Pushing branch '$BranchName' to remote repository..."
 git.exe push origin $BranchName
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to push branch '$BranchName' to origin."
@@ -93,7 +103,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Branch '$BranchName' pushed to origin."
 
-# Step 5: Create a pull request using GitHub CLI
+# Step 6: Create a pull request using GitHub CLI
 try {
     gh pr create --title "$CommitMessage" --body "Automated PR for branch '$BranchName'" --base main --head $BranchName
     if ($LASTEXITCODE -eq 0) {
@@ -106,7 +116,7 @@ try {
     exit 1
 }
 
-# Step 6: Merge the branch into main if requested
+# Step 7: Merge the branch into main if requested
 if ($MergeToMain) {
     try {
         # Checkout the main branch
@@ -137,6 +147,3 @@ if ($MergeToMain) {
         exit 1
     }
 }
-
-#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
-#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation" -MergeToMain

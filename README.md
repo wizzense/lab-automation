@@ -4,21 +4,23 @@
 
 Automate setup of github repo for maintaining all of this information, files, code, and instructions for deployment.
 
-- ~~automate download and install git~~ - Done
-- ~~automate download and install vscode~~ - Done
-- ~~automate download and install of git CLI~~
-- ~~automate create / clone repo~~ - Done
-- ~~use config files for username/email/repo/clone path~~ - done
-- ~~automate git management~~
-- Automate installation and configuration of hyper-v on Primary PC and Work PC
+- [x] automate download and install git
+- [x] automate download and install vscode
+- [x] automate download and install of git CLI
+- [x] automate create / clone repo
+- [x] use config files for username/email/repo/clone path
+- [x] automate git management
+- [ ] Create a PS module to reduce compelxity of auto-setup and config
+- [ ] Mirror with Python
+- [ ] Automate installation and configuration of hyper-v on Primary PC and Work PC
   - need to make repo/configs aware of primary vs work PC
-- automate hyper-v clustering between primary pc and work pc
-- automate creation of control node VM.
-- automate download of common OS ISOs
-- automate provisioning baremetal hypervisor with hyper-v using tanium provision
-- automate install and configure of WAC v2 (insider preview)
-- automate deployment and configuration of VMs to hyper-v
-- use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
+- [ ] automate hyper-v clustering between primary pc and work pc
+- [ ] automate creation of control node VM.
+- [ ] automate download of common OS ISOs
+- [ ] automate provisioning baremetal hypervisor with hyper-v using tanium provision
+- [ ] automate install and configure of WAC v2 (insider preview)
+- [ ] automate deployment and configuration of VMs to hyper-v
+- [ ]use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
 
 ## Guiding Principles
 
