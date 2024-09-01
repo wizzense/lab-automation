@@ -10,8 +10,9 @@ Automate setup of github repo for maintaining all of this information, files, co
 - [x] automate create / clone repo
 - [x] use config files for username/email/repo/clone path
 - [x] automate git management
+- [ ] automate 'launch' w/ controller script (that will run the install/downloads and everything else, etc)
 - [ ] Create a PS module to reduce compelxity of auto-setup and config
-- [ ] Mirror with Python
+- [ ] Mirror with powershell w/ python (eventually add support of proxmox)
 - [ ] Automate installation and configuration of hyper-v on Primary PC and Work PC
   - need to make repo/configs aware of primary vs work PC
 - [ ] automate hyper-v clustering between primary pc and work pc
@@ -20,7 +21,7 @@ Automate setup of github repo for maintaining all of this information, files, co
 - [ ] automate provisioning baremetal hypervisor with hyper-v using tanium provision
 - [ ] automate install and configure of WAC v2 (insider preview)
 - [ ] automate deployment and configuration of VMs to hyper-v
-- [ ]use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
+- [ ] use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
 
 ## Guiding Principles
 
