@@ -1,6 +1,6 @@
 # Tanium Deployed Homelab
 
-to-do:
+## to-do
 
 Automate setup of github repo for maintaining all of this information, files, code, and instructions for deployment.
 
@@ -9,12 +9,25 @@ Automate setup of github repo for maintaining all of this information, files, co
 - ~~automate download and install of git CLI~~
 - ~~automate create / clone repo~~ - Done
 - ~~use config files for username/email/repo/clone path~~ - done
-- automate git management
+- ~~automate git management~~
+- Automate installation and configuration of hyper-v on Primary PC and Work PC
+  - need to make repo/configs aware of primary vs work PC
+- automate hyper-v clustering between primary pc and work pc
+- automate creation of control node VM.
+- automate download of common OS ISOs
+- automate provisioning baremetal hypervisor with hyper-v using tanium provision
+- automate install and configure of WAC v2 (insider preview)
+- automate deployment and configuration of VMs to hyper-v
+- use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
+
+## Guiding Principles
 
 Painstaklingly document everything
 Painstakingly automate everything.
 Everything.
 From file downloads and .iso downloads to directory structure on Primary/ Work PCs for storing configurations and VMs, to VM deployment and configuration and management.
+
+## Definitions
 
 Primary PC = Home PC - recommended candidate for as primary hypervisor for the primary control node
 
@@ -22,18 +35,9 @@ Primary Control Node = VM on primary PC, provisioned for Tanium Cloud.
 
 Work PC = Really, this is a secondary PC, but we're assuming you have hardware provided by your company. This is what we will use for redundancy/ failover/ additional access point -- will also run as a hypervisor and clustered with the Primary PC (Home PC).
 
-Wishlist
+## Wishlist
 
 - The primary purpose is for it to be your control node for the deploying your lab useing Provision from Tanium Cloud. We do not need it to be running an available all the time, only when we want to re-provision our baremetal DOM or lab hardware. We will take care to automate every possible piece, from preparing an image, uploading the image to Tanium, creating a control node VM, instaling the Tanium Client, creating a satellite, creating a provision bundle, (leverage API) and deploying it from the satellite VM to the DOM/ lab hardware, which will then be Windows Server w/ Hyper-V, install Tanium, use automat/deploy/ ETC to copy .exes/.isos/local tooling and scripts for automating VM deployments (automate VM deployment of TanOS (look into using shell scripts for auto configuration fo TanOS and installation of Tanium Server) and use custom tags with packages that run the scripts/tooling that configures the VMs) Automate Domain Controller, pfsense, aTanium, and test endpoints on lab hardware.
-
-Automate installation and configuration of hyper-v on Primary PC and Work PC
-
-automate download of common OS ISOs
-automate configuration of VMs
-
-- use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
-
-automate creation of control node VM.
 
 I want to auto deploy a full mini-infrastructure
 
