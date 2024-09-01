@@ -1,7 +1,8 @@
 param(
     [string]$BranchName = "",
     [string]$CommitMessage = "",
-    [string]$ConfigFile = "..\_0.0 GitHub Install and Setup/0.0_setup-github-vscode.conf"
+    [string]$ConfigFile = "..\_0.0 GitHub Install and Setup/0.0_setup-github-vscode.conf",
+    [switch]$MergeToMain
 )
 
 # Verify that the configuration file exists
@@ -105,4 +106,37 @@ try {
     exit 1
 }
 
+# Step 6: Merge the branch into main if requested
+if ($MergeToMain) {
+    try {
+        # Checkout the main branch
+        git.exe checkout main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to checkout the 'main' branch."
+            exit 1
+        }
+        Write-Host "Checked out 'main' branch."
+
+        # Merge the dev branch into main
+        git.exe merge $BranchName
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Merge failed."
+            exit 1
+        }
+        Write-Host "Merged '$BranchName' into 'main'."
+
+        # Push the merged main branch to the remote repository
+        git.exe push origin main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to push the 'main' branch to origin."
+            exit 1
+        }
+        Write-Host "Pushed the 'main' branch to origin."
+    } catch {
+        Write-Host "Error: An issue occurred during the merge process."
+        exit 1
+    }
+}
+
 #.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
+#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation" -MergeToMain
