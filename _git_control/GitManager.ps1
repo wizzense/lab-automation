@@ -103,18 +103,48 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Branch '$BranchName' pushed to origin."
 
-# Step 6: Create a pull request using GitHub CLI
-try {
-    gh pr create --title "$CommitMessage" --body "Automated PR for branch '$BranchName'" --base main --head $BranchName
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "Pull request created successfully for branch '$BranchName'."
-    } else {
-        Write-Host "Error: Failed to create pull request."
+# Step 6: Merge the branch into main if requested
+if ($MergeToMain) {
+    try {
+        # Checkout the main branch
+        git.exe checkout main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to checkout the 'main' branch."
+            exit 1
+        }
+        Write-Host "Checked out 'main' branch."
+
+        # Pull the latest changes from the remote main branch
+        Write-Host "Pulling latest changes from the remote 'main' branch..."
+        git.exe pull origin main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to pull latest changes from remote 'main' branch."
+            exit 1
+        }
+        Write-Host "Successfully pulled the latest changes."
+
+        # Merge the dev branch into main
+        git.exe merge $BranchName
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Merge failed."
+            exit 1
+        }
+        Write-Host "Merged '$BranchName' into 'main'."
+
+        # Push the merged main branch to the remote repository
+        Write-Host "Pushing merged 'main' branch to remote repository..."
+        git.exe push origin main
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to push the 'main' branch to origin."
+            exit 1
+        }
+        Write-Host "Pushed the 'main' branch to origin."
+    } catch {
+        Write-Host "Error: An issue occurred during the merge process."
+        exit 1
     }
-} catch {
-    Write-Host "Error: GitHub CLI (gh) command failed. Ensure GitHub CLI is installed and authenticated."
-    exit 1
 }
+
 
 # Step 7: Merge the branch into main if requested
 if ($MergeToMain) {
