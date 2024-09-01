@@ -30,13 +30,9 @@ if (-not (Test-Path -Path $RepoDirectory)) {
     exit 1
 }
 
-# Change to the Git repository directory
-Set-Location $RepoDirectory
-Write-Host "Changed directory to $RepoDirectory"
-
 # Ensure the script is run from a Git repository
 try {
-    git.exe rev-parse --is-inside-work-tree
+    git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" rev-parse --is-inside-work-tree
 } catch {
     Write-Host "Error: This directory is not a Git repository."
     exit 1
@@ -49,11 +45,11 @@ if ($BranchName -eq "") {
 }
 
 # Check if the branch already exists
-$branchExists = git.exe branch --list $BranchName
+$branchExists = git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" branch --list $BranchName
 
 if ($branchExists) {
     # Branch exists, checkout the branch
-    git.exe checkout $BranchName
+    git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" checkout $BranchName
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Error: Failed to checkout existing branch '$BranchName'."
         exit 1
@@ -61,7 +57,7 @@ if ($branchExists) {
     Write-Host "Checked out existing branch '$BranchName'."
 } else {
     # Branch does not exist, create and checkout a new branch
-    git.exe checkout -b $BranchName
+    git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" checkout -b $BranchName
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Error: Failed to create or checkout branch '$BranchName'."
         exit 1
@@ -71,7 +67,7 @@ if ($branchExists) {
 
 # Step 2: Pull the latest changes from 'main' into 'dev-branch'
 Write-Host "Pulling latest changes from 'main' into '$BranchName'..."
-git.exe pull origin main
+git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" pull origin main
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to pull latest changes from 'main' into '$BranchName'."
     exit 1
@@ -79,7 +75,7 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "Successfully pulled the latest changes from 'main' into '$BranchName'."
 
 # Step 3: Stage all changes
-git.exe add .
+git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" add .
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to stage changes."
     exit 1
@@ -87,7 +83,7 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "All changes staged."
 
 # Step 4: Commit changes
-git.exe commit -m $CommitMessage
+git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" commit -m $CommitMessage
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to commit changes."
     exit 1
@@ -96,7 +92,7 @@ Write-Host "Changes committed with message: '$CommitMessage'."
 
 # Step 5: Push 'dev-branch' to remote repository
 Write-Host "Pushing branch '$BranchName' to remote repository..."
-git.exe push origin $BranchName
+git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" push origin $BranchName
 if ($LASTEXITCODE -ne 0) {
     Write-Host "Error: Failed to push branch '$BranchName' to origin."
     exit 1
@@ -120,7 +116,7 @@ try {
 if ($MergeToMain) {
     try {
         # Checkout the main branch
-        git.exe checkout main
+        git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" checkout main
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Failed to checkout the 'main' branch."
             exit 1
@@ -129,7 +125,7 @@ if ($MergeToMain) {
 
         # Pull the latest changes from the remote main branch
         Write-Host "Pulling latest changes from the remote 'main' branch..."
-        git.exe pull origin main
+        git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" pull origin main
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Failed to pull latest changes from remote 'main' branch."
             exit 1
@@ -137,7 +133,7 @@ if ($MergeToMain) {
         Write-Host "Successfully pulled the latest changes."
 
         # Merge the dev branch into main
-        git.exe merge $BranchName
+        git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" merge $BranchName
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Merge failed."
             exit 1
@@ -146,7 +142,7 @@ if ($MergeToMain) {
 
         # Push the merged main branch to the remote repository
         Write-Host "Pushing merged 'main' branch to remote repository..."
-        git.exe push origin main
+        git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" push origin main
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Failed to push the 'main' branch to origin."
             exit 1
@@ -155,7 +151,7 @@ if ($MergeToMain) {
 
         # Optionally, push the updated dev-branch as well to ensure both are in sync
         Write-Host "Pushing updated '$BranchName' branch to remote repository..."
-        git.exe push origin $BranchName
+        git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" push origin $BranchName
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Failed to push updated branch '$BranchName' to origin."
             exit 1
@@ -166,7 +162,6 @@ if ($MergeToMain) {
         exit 1
     }
 }
-
 
 #.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
 #.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation" -MergeToMain
