@@ -1,6 +1,6 @@
 {
     "GitInstallerUrl":  "https://github.com/git-for-windows/git/releases/download/v2.46.0.windows.1/Git-2.46.0-64-bit.exe",
-    "GitHubCLIInstallerUrl":  "https://github.com/cli/cli/releases/download/v2.55.0/gh_2.55.0_windows_amd64.msi",
+    "GitHubCLIInstallerUrl": "https://github.com/cli/cli/releases/download/v2.55.0/gh_2.55.0_windows_amd64.msi",
     "GitUsername":  "wizzense",
     "GitEmail":  "wizzense@wizzense.com",
     "VSCodeInstallerUrl":  "https://aka.ms/win32-x64-user-stable",

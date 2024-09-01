@@ -1,5 +1,5 @@
 # Define the path to the configuration file
-$configFilePath = ".\0.0_install-github.conf"
+$configFilePath = ".\0.0_setup-github-vscode.conf"
 
 # Load the existing configuration file
 if (-not (Test-Path $configFilePath)) {
@@ -33,6 +33,30 @@ function Update-GitInstallerUrl {
     }
 }
 
+# Function to update GitHub CLI installer URL
+function Update-GitHubCLIInstallerUrl {
+    Write-Host "Fetching the latest GitHub CLI installer URL..."
+    
+    # GitHub API endpoint for the latest GitHub CLI release
+    $ghCliApiUrl = "https://api.github.com/repos/cli/cli/releases/latest"
+    
+    # Fetch the latest release information from GitHub
+    $ghCliReleaseInfo = Invoke-RestMethod -Uri $ghCliApiUrl -UseBasicParsing
+
+    # Filter assets to find the correct installer for Windows 64-bit
+    $ghCliInstallerAsset = $ghCliReleaseInfo.assets | Where-Object { $_.name -like "*windows_amd64.msi" }
+
+    if ($ghCliInstallerAsset) {
+        $latestGhCliInstallerUrl = $ghCliInstallerAsset.browser_download_url
+        Write-Host "Latest GitHub CLI installer URL: $latestGhCliInstallerUrl"
+
+        # Update the configuration file
+        $config.GitHubCLIInstallerUrl = $latestGhCliInstallerUrl
+    } else {
+        Write-Host "Could not find a Windows 64-bit installer in the latest GitHub CLI release."
+    }
+}
+
 # Function to update VSCode installer URL
 function Update-VSCodeInstallerUrl {
     Write-Host "Fetching the latest VSCode installer URL..."
@@ -49,6 +73,7 @@ function Update-VSCodeInstallerUrl {
 
 # Update the configuration with the latest URLs
 Update-GitInstallerUrl
+Update-GitHubCLIInstallerUrl
 Update-VSCodeInstallerUrl
 
 # Save the updated configuration back to the file

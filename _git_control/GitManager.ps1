@@ -1,7 +1,7 @@
 param(
     [string]$BranchName = "",
-    [string]$CommitMessage = "Default commit message",
-    [string]$ConfigFile = ".\_0.0 GitHub Install and Setup/0.0_setup-github-vscode.conf"
+    [string]$CommitMessage = "",
+    [string]$ConfigFile = "..\_0.0 GitHub Install and Setup/0.0_setup-github-vscode.conf"
 )
 
 # Verify that the configuration file exists
@@ -47,13 +47,26 @@ if ($BranchName -eq "") {
     exit 1
 }
 
-# Step 1: Create and Checkout a New Branch
-git.exe checkout -b $BranchName
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Error: Failed to create or checkout branch '$BranchName'."
-    exit 1
+# Check if the branch already exists
+$branchExists = git.exe branch --list $BranchName
+
+if ($branchExists) {
+    # Branch exists, checkout the branch
+    git.exe checkout $BranchName
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: Failed to checkout existing branch '$BranchName'."
+        exit 1
+    }
+    Write-Host "Checked out existing branch '$BranchName'."
+} else {
+    # Branch does not exist, create and checkout a new branch
+    git.exe checkout -b $BranchName
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: Failed to create or checkout branch '$BranchName'."
+        exit 1
+    }
+    Write-Host "Branch '$BranchName' created and checked out."
 }
-Write-Host "Branch '$BranchName' created and checked out."
 
 # Step 2: Stage all changes
 git.exe add .
@@ -92,4 +105,4 @@ try {
     exit 1
 }
 
-#.\Automate-GitProcess.ps1 -BranchName "feature-branch" -CommitMessage "Added new automation script"
+#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
