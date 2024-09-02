@@ -18,8 +18,9 @@ Automate setup of github repo for maintaining all of this information, files, co
 - [ ] automate 'launch' w/ controller script (that will run the install/downloads and everything else, etc)
 - [ ] Create a PS module to reduce compelxity of auto-setup and config
 - [ ] Mirror with powershell w/ python (eventually add support of proxmox)
-- [ ] Automate installation and configuration of hyper-v on Primary PC and Work PC
+- [x] Automate installation and configuration of hyper-v on Primary PC and Work PC
   - [ ] need to make repo/configs aware of primary vs work PC
+  - [ ] automate installation of tanium
 - [x] Automate updating of imageinfo.conf with images found in the configured data store location
   - does require a little bit of pre-work:
     - Will requires isos in configured data store from hosts.conf (working on automated dowwnload of isos to here) with an accomapnying iso imageinfo.conf file
@@ -41,6 +42,7 @@ Automate setup of github repo for maintaining all of this information, files, co
   - [ ] add instructions/workflow to pair new iso downloads with a .conf file to be read with all of the relevant information
 - [ ] automate update of pfsense.conf to get latest ISO from directory
 - [ ] automate creation and configuration of vm- .conf files so info can be ingested from lists to mass create vm- .conf files.
+  - [ ] figure out credential management so that scripts don't require hardcoded credentials either in script or in config file, possible Keys
 - [ ] automate hyper-v clustering between primary pc and work pc
 - [ ] automate creation of control node VM.
   - [x] Use server core, which is a key in the vm- conf file now

@@ -29,7 +29,6 @@ function Uninstall-Git {
         Write-Host "Uninstalling Git..."
         Start-Process -FilePath $gitUninstallPath -ArgumentList "/SILENT" -Wait
         Write-Host "Git uninstallation completed."
-
     } else {
         Write-Host "Git is not installed or the uninstaller was not found."
     }
@@ -39,8 +38,8 @@ function Uninstall-Git {
 # doesn't work, but that's okay, kind of don't want it to yet
 function Uninstall-VSCode {
     # Check the user-specific installation directory under LOCALAPPDATA
-    $vscodeInstallDir = "$env:LOCALAPPDATA\Programs\Microsoft VS Code"
-    $vscodeUninstaller = "$vscodeInstallDir\unins000.exe"
+    $vscodeInstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Microsoft VS Code"
+    $vscodeUninstaller = Join-Path -Path $vscodeInstallDir -ChildPath "unins000.exe"
     
     if (Test-Path $vscodeUninstaller) {
         Write-Host "Uninstalling Visual Studio Code from $vscodeInstallDir..."

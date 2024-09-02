@@ -5,6 +5,9 @@ param(
     [switch]$MergeToMain
 )
 
+# Resolve the full path to the configuration file relative to the script location
+$ConfigFile = Join-Path -Path $PSScriptRoot -ChildPath $ConfigFile
+
 # Verify that the configuration file exists
 if (-not (Test-Path -Path $ConfigFile)) {
     Write-Host "Error: Configuration file not found at path $ConfigFile"

@@ -10,7 +10,7 @@ param(
 )
 
 function Update-GeneralSettings {
-    $configFile = "general-settings.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "general-settings.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     $config.accept_eula_with_email_address = Read-Host "Enter EULA email address"
@@ -23,7 +23,7 @@ function Update-GeneralSettings {
 }
 
 function Update-Hosts {
-    $configFile = "hosts.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "hosts.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     # Assuming you want to access the Hyper-V configuration
@@ -60,7 +60,7 @@ function Update-Hosts {
 }
 
 function Update-VMspecs {
-    $configFile = "vmspecs.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "vmspecs.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     # Display available VM specs to the user
@@ -92,7 +92,7 @@ function Update-VMspecs {
 }
 
 function Update-ImageInfo {
-    $configFile = "imageinfo.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "imageinfo.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     # Display available images to the user
@@ -102,7 +102,6 @@ function Update-ImageInfo {
         $i++
         Write-Output "$i. $_" 
     }
-
 
     $imageIndex = Read-Host "Select Image by entering the corresponding number"
     
@@ -124,7 +123,7 @@ function Update-ImageInfo {
 }
 
 function Update-ArrayInfo {
-    $configFile = "arrayinfo.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "arrayinfo.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     $arrayName = "MyArray1"  # Assuming one array in this example
@@ -137,7 +136,7 @@ function Update-ArrayInfo {
 }
 
 function Update-pfSense {
-    $configFile = "pfsense.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "pfsense.conf"
     $config = Get-Content $configFile | ConvertFrom-Json
 
     $config.pfSense[0].ISO = Read-Host "Enter ISO file for pfSense"
@@ -154,7 +153,7 @@ function Update-VMConfig {
         Write-Error "Please specify the VM config file name using -VMConfigFileName parameter."
         return
     }
-    $configFile = "$VMConfigFileName.conf"
+    $configFile = Join-Path -Path $PSScriptRoot -ChildPath "$VMConfigFileName.conf"
     if (-not (Test-Path $configFile)) {
         Write-Error "The specified VM config file does not exist."
         return
@@ -166,7 +165,7 @@ function Update-VMConfig {
     $config.platform = Read-Host "Enter platform"
 
     # Display available images to the user
-    $imageConfigFile = "imageinfo.conf"
+    $imageConfigFile = Join-Path -Path $PSScriptRoot -ChildPath "imageinfo.conf"
     $imageConfig = Get-Content $imageConfigFile | ConvertFrom-Json
     $imageList = $imageConfig.imageinfo | ForEach-Object { $_.PSObject.Properties.Name }
 
@@ -187,7 +186,7 @@ function Update-VMConfig {
     }
 
     # Display available VM specs to the user
-    $vmspecConfigFile = "vmspecs.conf"
+    $vmspecConfigFile = Join-Path -Path $PSScriptRoot -ChildPath "vmspecs.conf"
     $vmspecConfig = Get-Content $vmspecConfigFile | ConvertFrom-Json
     $vmspecsList = $vmspecConfig.vmspecs | ForEach-Object { $_.PSObject.Properties.Name }
 

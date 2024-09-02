@@ -1,0 +1,131 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20240901200714
+Username: DESKTOP-U2KTKU8\alexa
+RunAs User: DESKTOP-U2KTKU8\alexa
+Configuration Name: 
+Machine: DESKTOP-U2KTKU8 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command Import-Module 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules\PowerShellEditorServices\PowerShellEditorServices.psd1'; Start-EditorServices -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '2024.2.2' -BundledModulesPath 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules' -EnableConsoleRepl -StartupBanner "PowerShell Extension v2024.2.2
+Copyright (c) Microsoft Corporation.
+
+https://aka.ms/vscode-powershell
+Type 'help' to get help.
+" -LogLevel 'Normal' -LogPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\logs\1725246312-67f0f011-bbf1-48d4-963f-eeddc508709d1725246311295' -SessionDetailsPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\sessions\PSES-VSCode-17600-690521.json' -FeatureFlags @() 
+Process ID: 19192
+PSVersion: 5.1.22621.3958
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.3958
+BuildVersion: 10.0.22621.3958
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt
+Starting: GitHub configuration update
+PS>TerminatingError(Out-File): "The process cannot access the file 'C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt' because it is being used by another process."
+>> TerminatingError(Out-File): "The process cannot access the file 'C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt' because it is being used by another process."
+Script execution halted due to errors.
+PS>TerminatingError(Out-File): "The process cannot access the file 'C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt' because it is being used by another process."
+**********************
+Windows PowerShell transcript end
+End time: 20240901200714
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20240901200829
+Username: DESKTOP-U2KTKU8\alexa
+RunAs User: DESKTOP-U2KTKU8\alexa
+Configuration Name: 
+Machine: DESKTOP-U2KTKU8 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command Import-Module 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules\PowerShellEditorServices\PowerShellEditorServices.psd1'; Start-EditorServices -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '2024.2.2' -BundledModulesPath 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules' -EnableConsoleRepl -StartupBanner "PowerShell Extension v2024.2.2
+Copyright (c) Microsoft Corporation.
+
+https://aka.ms/vscode-powershell
+Type 'help' to get help.
+" -LogLevel 'Normal' -LogPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\logs\1725246312-67f0f011-bbf1-48d4-963f-eeddc508709d1725246311295' -SessionDetailsPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\sessions\PSES-VSCode-17600-690521.json' -FeatureFlags @() 
+Process ID: 19192
+PSVersion: 5.1.22621.3958
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.3958
+BuildVersion: 10.0.22621.3958
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt
+[09/01/2024 20:08:29] Starting: GitHub configuration update
+[09/01/2024 20:08:29] Error during: GitHub configuration update - The term 'C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\tanium-homelab-automation\_0.0 GitHub Install and Setup\0.0_Update-GitHubConf.ps1' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+PS>TerminatingError(): "Aborting due to error in GitHub configuration update"
+[09/01/2024 20:08:29] Script execution halted due to errors: Aborting due to error in GitHub configuration update
+**********************
+Windows PowerShell transcript end
+End time: 20240901200829
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20240901200928
+Username: DESKTOP-U2KTKU8\alexa
+RunAs User: DESKTOP-U2KTKU8\alexa
+Configuration Name: 
+Machine: DESKTOP-U2KTKU8 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command Import-Module 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules\PowerShellEditorServices\PowerShellEditorServices.psd1'; Start-EditorServices -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '2024.2.2' -BundledModulesPath 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules' -EnableConsoleRepl -StartupBanner "PowerShell Extension v2024.2.2
+Copyright (c) Microsoft Corporation.
+
+https://aka.ms/vscode-powershell
+Type 'help' to get help.
+" -LogLevel 'Normal' -LogPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\logs\1725246312-67f0f011-bbf1-48d4-963f-eeddc508709d1725246311295' -SessionDetailsPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\sessions\PSES-VSCode-17600-690521.json' -FeatureFlags @() 
+Process ID: 19192
+PSVersion: 5.1.22621.3958
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.3958
+BuildVersion: 10.0.22621.3958
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt
+[09/01/2024 20:09:28] Starting: GitHub configuration update
+Configuration file not found at .\0.0_setup-github-vscode.conf.
+[09/01/2024 20:09:28] Error during: GitHub configuration update - Script C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\_0.0 GitHub Install and Setup\0.0_Update-GitHubConf.ps1 failed with exit code 1
+PS>TerminatingError(): "Aborting due to error in GitHub configuration update"
+[09/01/2024 20:09:28] Script execution halted due to errors: Aborting due to error in GitHub configuration update
+**********************
+Windows PowerShell transcript end
+End time: 20240901200928
+**********************
+**********************
+Windows PowerShell transcript start
+Start time: 20240901201029
+Username: DESKTOP-U2KTKU8\alexa
+RunAs User: DESKTOP-U2KTKU8\alexa
+Configuration Name: 
+Machine: DESKTOP-U2KTKU8 (Microsoft Windows NT 10.0.22621.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command Import-Module 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules\PowerShellEditorServices\PowerShellEditorServices.psd1'; Start-EditorServices -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '2024.2.2' -BundledModulesPath 'c:\Users\alexa\.vscode\extensions\ms-vscode.powershell-2024.2.2\modules' -EnableConsoleRepl -StartupBanner "PowerShell Extension v2024.2.2
+Copyright (c) Microsoft Corporation.
+
+https://aka.ms/vscode-powershell
+Type 'help' to get help.
+" -LogLevel 'Normal' -LogPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\logs\1725246312-67f0f011-bbf1-48d4-963f-eeddc508709d1725246311295' -SessionDetailsPath 'c:\Users\alexa\AppData\Roaming\Code\User\globalStorage\ms-vscode.powershell\sessions\PSES-VSCode-17600-690521.json' -FeatureFlags @() 
+Process ID: 19192
+PSVersion: 5.1.22621.3958
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.22621.3958
+BuildVersion: 10.0.22621.3958
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+Transcript started, output file is C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\AutomationScriptLog.txt
+[09/01/2024 20:10:29] Starting: GitHub configuration update
+Configuration file not found at .\0.0_setup-github-vscode.conf.
+[09/01/2024 20:10:29] Error during: GitHub configuration update - Script C:\Users\alexa\OneDrive\0. Lab\tanium-homelab-automation\_0.0 GitHub Install and Setup\0.0_Update-GitHubConf.ps1 failed with exit code 1
+PS>TerminatingError(): "Aborting due to error in GitHub configuration update"
+[09/01/2024 20:10:29] Script execution halted due to errors: Aborting due to error in GitHub configuration update
+**********************
+Windows PowerShell transcript end
+End time: 20240901201029
+**********************

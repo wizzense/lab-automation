@@ -1,5 +1,5 @@
 # Define the path to the configuration file
-$configFilePath = ".\0.0_setup-github-vscode.conf"
+$configFilePath = Join-Path -Path $PSScriptRoot -ChildPath "0.0_setup-github-vscode.conf"
 
 # Load the existing configuration file
 if (-not (Test-Path $configFilePath)) {
@@ -80,3 +80,7 @@ Update-VSCodeInstallerUrl
 $config | ConvertTo-Json -Depth 4 | Set-Content -Path $configFilePath
 
 Write-Host "Configuration file updated successfully."
+
+# End of the script
+Write-Output "Configuration file updated successfully."
+exit 0

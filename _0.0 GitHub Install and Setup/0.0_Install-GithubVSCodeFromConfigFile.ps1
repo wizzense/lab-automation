@@ -1,6 +1,6 @@
 # Load configuration file
 Write-Host "Loading configuration file..."
-$configFile = ".\0.0_setup-github-vscode.conf"
+$configFile = Join-Path -Path $PSScriptRoot -ChildPath "0.0_setup-github-vscode.conf"
 $config = Get-Content -Raw -Path $configFile | ConvertFrom-Json
 Write-Host "Configuration file loaded."
 
@@ -10,7 +10,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
     Write-Host "Git is already installed."
 } else {
     Write-Host "Git is not installed. Downloading Git installer from $($config.GitInstallerUrl)..."
-    $gitInstaller = "$env:TEMP\GitInstaller.exe"
+    $gitInstaller = Join-Path -Path $env:TEMP -ChildPath "GitInstaller.exe"
     Invoke-WebRequest -Uri $config.GitInstallerUrl -OutFile $gitInstaller -Verbose
     Write-Host "Git installer downloaded to $gitInstaller."
 
@@ -34,13 +34,13 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
     Write-Host "GitHub CLI is already installed."
 } else {
     Write-Host "GitHub CLI is not installed. Downloading GitHub CLI installer from $($config.GitHubCLIInstallerUrl)..."
-    $ghCliInstaller = "$env:TEMP\GitHubCLIInstaller.msi"
+    $ghCliInstaller = Join-Path -Path $env:TEMP -ChildPath "GitHubCLIInstaller.msi"
     Invoke-WebRequest -Uri $config.GitHubCLIInstallerUrl -OutFile $ghCliInstaller -Verbose
     Write-Host "GitHub CLI installer downloaded to $ghCliInstaller."
 
     Write-Host "Installing GitHub CLI with elevated privileges..."
     # Run the installer with elevated privileges
-    Start-Process -FilePath "msiexec.exe" -ArgumentList "/i", "`"$ghCliInstaller`"", "/quiet", "/log", "$env:TEMP\ghCliInstall.log" -Wait -Verb RunAs
+    Start-Process -FilePath "msiexec.exe" -ArgumentList "/i", "`"$ghCliInstaller`"", "/quiet", "/log", (Join-Path -Path $env:TEMP -ChildPath "ghCliInstall.log") -Wait -Verb RunAs
     Write-Host "GitHub CLI installation completed."
 
     Remove-Item -Path $ghCliInstaller
@@ -54,7 +54,7 @@ if (Test-Path $vscodePath) {
     Write-Host "Visual Studio Code is already installed."
 } else {
     Write-Host "Visual Studio Code is not installed. Downloading VSCode installer from $($config.VSCodeInstallerUrl)..."
-    $vscodeInstaller = "$env:TEMP\VSCodeInstaller.exe"
+    $vscodeInstaller = Join-Path -Path $env:TEMP -ChildPath "VSCodeInstaller.exe"
     Invoke-WebRequest -Uri $config.VSCodeInstallerUrl -OutFile $vscodeInstaller -Verbose
     Write-Host "VSCode installer downloaded to $vscodeInstaller."
 

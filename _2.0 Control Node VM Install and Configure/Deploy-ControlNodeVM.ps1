@@ -6,6 +6,13 @@ param(
     [string]$VMConfigFolder = ".\"
 )
 
+# Resolve full paths relative to the script location
+$GeneralSettingsFile = Join-Path -Path $PSScriptRoot -ChildPath $GeneralSettingsFile
+$HostsFile = Join-Path -Path $PSScriptRoot -ChildPath $HostsFile
+$VMspecsFile = Join-Path -Path $PSScriptRoot -ChildPath $VMspecsFile
+$ImageInfoFile = Join-Path -Path $PSScriptRoot -ChildPath $ImageInfoFile
+$VMConfigFolder = Join-Path -Path $PSScriptRoot -ChildPath $VMConfigFolder
+
 # Load the JSON configuration files
 #$generalSettings = Get-Content $GeneralSettingsFile | ConvertFrom-Json
 $hosts = Get-Content $HostsFile | ConvertFrom-Json

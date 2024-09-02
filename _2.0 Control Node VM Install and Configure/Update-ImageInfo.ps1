@@ -67,6 +67,9 @@ function Update-ImageInfo {
 }
 
 # Main Script Execution
+$HostsFile = Join-Path -Path $PSScriptRoot -ChildPath $HostsFile
+$ImageInfoFile = Join-Path -Path $PSScriptRoot -ChildPath $ImageInfoFile
+
 $isoLocation = Get-ISOLocation -hostsFile $HostsFile
 if ($isoLocation) {
     Update-ImageInfo -isoLocation $isoLocation -imageInfoFile $ImageInfoFile
