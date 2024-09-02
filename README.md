@@ -15,9 +15,12 @@ Automate setup of github repo for maintaining all of this information, files, co
   - [x] ip
   - [x] OS
   - [x] etc
-- [ ] automate 'launch' w/ controller script (that will run the install/downloads and everything else, etc)
+- [x] automate 'launch' w/ controller script (that will run the install/downloads and everything else, etc)
+  - [ ] Still need to implement download of ISOs and all that
+  - [ ] automate download of common OS ISOs and save in location specified in hosts.conf ISOLocation
+    - [ ] and configure in kickstart script
 - [ ] Create a PS module to reduce compelxity of auto-setup and config
-- [ ] Mirror with powershell w/ python (eventually add support of proxmox)
+- [ ] Mirror powershell w/ python (eventually add support of proxmox)
 - [x] Automate installation and configuration of hyper-v on Primary PC and Work PC
   - [ ] need to make repo/configs aware of primary vs work PC
   - [ ] automate installation of tanium
@@ -40,6 +43,7 @@ Automate setup of github repo for maintaining all of this information, files, co
 }
 
   - [ ] add instructions/workflow to pair new iso downloads with a .conf file to be read with all of the relevant information
+  - [x] added an iso onboarding script that detects isos without conf files in the configured data store.
 - [ ] automate update of pfsense.conf to get latest ISO from directory
 - [ ] automate creation and configuration of vm- .conf files so info can be ingested from lists to mass create vm- .conf files.
   - [ ] figure out credential management so that scripts don't require hardcoded credentials either in script or in config file, possible Keys
@@ -49,7 +53,7 @@ Automate setup of github repo for maintaining all of this information, files, co
   - [ ] Figure out how to auto unattend the install properly w/ server core
 - [x] Update the Update-ConfigFiles script to automatically get a selection of images that can be chosen.
   - [x] Do the same for vmspecs
-- [ ] automate download of common OS ISOs and save in location specified in hosts.conf ISOLocation
+
 - [ ] automate provisioning baremetal hypervisor with hyper-v using tanium provisionand primary control node as a satellite
   - [ ] create content/ automate playbooks/ custom tags/ enhanced tags/ content sets/ deploy/ patch/ for control node and deploying hypervisor to baremetal
 - [ ] automate install and configure of WAC v2 (insider preview)
@@ -112,34 +116,3 @@ add primary PC to your lab tanium instance for additional and mirror configurati
 Have a redundant ldap/dns/dhcp running on Linux that I can fail over configs from Windows
 
 automate deployment of WAC V2 on Primary PC, Work PC, and Lab hypervisor.
-
-## Instructions
-
-### Step 1: Configure a VM on Main PC as a Tanium Cloud GA Satellite for PXE Provisioning Lab
-
-1. On Main Windows PC or Work PC, install/enable Hyper-V.
-   - Create your 'Control Node' for your homelab. THis will be a VM for many reasons. We can isolate it from your mprimary endpoint and install Tanium. This protects your information and Tanium and prevent unncessary bleedover. This is ideal if you want to leverage your personal hardware in order to create a more rbust homelab.
-
-> **Note:**
-
-### Step 2: Description of Step 2
-
-Detailed instructions for Step 2.
-
-> **Note:** Any important notes related to Step 2.
-
-### Step 3: Description of Step 3
-
-Detailed instructions for Step 3.
-
-> **Note:** Any important notes related to Step 3.
-
-## To-Do List
-
-- [ ] Task 1
-- [ ] Task 2
-- [ ] Task 3
-
-## Additional Notes
-
-Any additional notes or comments can be added here.
