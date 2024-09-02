@@ -1,0 +1,26 @@
+{
+    "imageinfo": [
+        {
+            "Windows 10 Enterprise": {
+                "ISO": "en-us_windows_10_business_editions_version_22h2_updated_jan_2024_x64_dvd_5453cae4.iso",
+                "Edition": "Windows 10 Enterprise",
+                "Key": "NPPR9-FWDCX-D2C8J-H872K-2YT43",
+                "ESXGuestOsIdentifier": "windows9_64Guest"
+            },
+            "Windows Server 2022 Standard": {
+                "ISO": "en-us_windows_server_2022_updated_jan_2024_x64_dvd_2b7a0c9f.iso",
+                "Edition": "Windows Server 2022 SERVERSTANDARD",
+                "Key": "YX99H-NM7P6-MCMQR-CWVBG-C92X8",
+                "ESXGuestOsIdentifier": "windows9Server64Guest"
+            },
+            "Rocky 9": {
+                "ISO": "Rocky-9.3-x86_64-dvd.iso",
+                "ESXGuestOsIdentifier": "centos7_64Guest"
+            },
+            "TanOS 1.8.3": {
+                "ISO": "TanOS.1.8.3.0096-DEV.iso",
+                "ESXGuestOsIdentifier": "other3xLinux64Guest"
+            }
+        }
+    ]
+}

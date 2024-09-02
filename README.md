@@ -10,24 +10,50 @@ Automate setup of github repo for maintaining all of this information, files, co
 - [x] automate create / clone repo
 - [x] use config files for username/email/repo/clone path
 - [x] automate git management
-- [ ] hypvervisor information config file
-  - [ ] name
-  - [ ] ip
-  - [ ] OS
-  - [ ] etc
+- [x] hypvervisor information config file
+  - [x] name
+  - [x] ip
+  - [x] OS
+  - [x] etc
 - [ ] automate 'launch' w/ controller script (that will run the install/downloads and everything else, etc)
 - [ ] Create a PS module to reduce compelxity of auto-setup and config
 - [ ] Mirror with powershell w/ python (eventually add support of proxmox)
 - [ ] Automate installation and configuration of hyper-v on Primary PC and Work PC
   - [ ] need to make repo/configs aware of primary vs work PC
+- [x] Automate updating of imageinfo.conf with images found in the configured data store location
+  - does require a little bit of pre-work:
+    - Will requires isos in configured data store from hosts.conf (working on automated dowwnload of isos to here) with an accomapnying iso imageinfo.conf file
+    - With this, you will input required information like license key and iso name.
+    - {
+    "imageinfo": [
+        {
+            "Windows 10 Enterprise": {
+                "ISO": "en-us_windows_10_business_editions_version_22h2_updated_jan_2024_x64_dvd_5453cae4.iso",
+                "Edition": "Windows 10 Enterprise",
+                "Key": "NPPR9-FWDCX-D2C8J-H872K-2YT43",
+                "ESXGuestOsIdentifier": "windows9_64Guest"
+            }
+
+        }
+    ]
+}
+
+  - [ ] add instructions/workflow to pair new iso downloads with a .conf file to be read with all of the relevant information
+- [ ] automate update of pfsense.conf to get latest ISO from directory
+- [ ] automate creation and configuration of vm- .conf files so info can be ingested from lists to mass create vm- .conf files.
 - [ ] automate hyper-v clustering between primary pc and work pc
 - [ ] automate creation of control node VM.
-- [ ] automate download of common OS ISOs
-- [ ] automate provisioning baremetal hypervisor with hyper-v using tanium provision
+  - [x] Use server core, which is a key in the vm- conf file now
+  - [ ] Figure out how to auto unattend the install properly w/ server core
+- [x] Update the Update-ConfigFiles script to automatically get a selection of images that can be chosen.
+  - [x] Do the same for vmspecs
+- [ ] automate download of common OS ISOs and save in location specified in hosts.conf ISOLocation
+- [ ] automate provisioning baremetal hypervisor with hyper-v using tanium provisionand primary control node as a satellite
   - [ ] create content/ automate playbooks/ custom tags/ enhanced tags/ content sets/ deploy/ patch/ for control node and deploying hypervisor to baremetal
 - [ ] automate install and configure of WAC v2 (insider preview)
 - [ ] automate deployment and configuration of VMs to hyper-v
 - [ ] use config file to configure desired deployment (VMs, TS, etc.) and make it re-usable to add additional VMs later.
+- [ ] automate configuration of network stuff
 
 ## Guiding Principles
 
