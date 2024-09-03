@@ -1,22 +1,57 @@
 # Tanium Deployed Homelab
+git clone --recurse-submodules https://github.com/wizzense/tanium-homelab-automation.git
+
+
+Win PE add-on required for media creation
+  automate download and install of adk and adk add-on
+  https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-create-usb-bootable-drive?view=windows-11
+    https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install
+    Download the ADK 10.1.25398.1 (September 2023):
+    ADK 10.1.25398.1 (September 2023)
+    Windows PE add-on for the ADK 10.1.25398.1 (September 2023)
+
+- Standard ISOs just might not work for this
+  - looks like I need to create a custom WIM in order to boot from ISO and configure the OS
 
 - look into automating container clusters
   
 - look into auotmatically getting isos and keys from https://my.visualstudio.com/
+- opentofu uses dependencies to control orrder of operations
 
-- need to prep the isos with the autounattend files by mounting them and placing it at the top level of the iso
-  - this will make it so windows detected the file and performs the install -- can definitely automate doing this prep work
-  - https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install - need this to work on the isos
+```tofu
+# Declare the hyperv_vhd resource for the PrimaryControlNode VHD
+resource "hyperv_vhd" "PrimaryControlNode-vhd" {
+  depends_on = [hyperv_network_switch.Lan]
+
+  path = "C:\\HyperV\\VMs\\PrimaryControlNode\\PrimaryControlNode.vhdx"
+  size = 60737421312 # Size in bytes, make sure this is divisible by 4096
+}
+```
+
+
+  - https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install - need this to work on the isos nand sysprep
     - look into automating download and install
-    - create C:\temp 
-      - create WindowsISO
-        - copy AutoUnattendTempalte.xml to WindowsISO
-    - mount the iso ADK is on, install, run command from: C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg
-    - oscdimg -m -o -u2 -bC:\temp\WindowsISO\boot\etfsboot.com C:\temp\WindowsISO C:\temp\NewWindowsISO.iso
-    - Copy iso from C:\temp\NewWindowsISO.iso to 'data' drive (E:\data\).
-    - replace current iso with new one, with new name
-    - alternatively, update tofu config files with new iso name.
-  
+
+run this to prepare the .ppkg, which you then copy to the PCN VM
+C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Imaging and Configuration Designer
+
+```scp
+scp .\tanium_homelab_automation.zip administrator@192.168.87.134:C:\
+```
+
+```dism
+PS C:\tanium_homelab_automation\tanium_homelab_automation> dism /Online /Add-ProvisioningPackage /PackagePath:tanium_homelab_automation.ppkg
+
+Deployment Image Servicing and Management tool
+Version: 10.0.26100.1
+
+Image Version: 10.0.26100.1
+
+The operation completed successfully.
+```
+
+prepare tanium client[https://help.tanium.com/bundle/ug_client_cloud/page/client/os_imaging_windows.html]
+
 - look into using opentofu for Infrastructure as Code[https://opentofu.org/docs/intro/install/standalone/]
   - Looks like opentofu is supposed to be installed on the hypervisor - so this will be interesting for installing control node vms vs vms on the lab hypervisor -- might be two layers here.
   - <https://library.tf/providers/taliesins/hyperv/latest> -
