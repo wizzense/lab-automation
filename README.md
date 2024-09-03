@@ -1,5 +1,15 @@
 # Tanium Deployed Homelab
-git clone --recurse-submodules https://github.com/wizzense/tanium-homelab-automation.git
+
+figureout  deployment of kubernetes 
+elastic search 
+figure out automating self hosting webserver and pushing content to real website, wizzense.com
+look into MDT and pixie booting 
+maybe that will be easier than mounting this custom bootable bullshit 
+
+https://help.tanium.com/bundle/ug_provision_cloud/page/provision/preparing_content.html
+
+
+how does kubernetes and docker play into this?
 
 
 Win PE add-on required for media creation

@@ -47,6 +47,55 @@ if ($BranchName -eq "") {
     exit 1
 }
 
+# Function to initialize, commit, and push files to the corresponding repository
+function Initialize-Repo {
+    param (
+        [string]$RepoPath,
+        [string]$Username,
+        [string]$RepoName
+    )
+
+    Set-Location -Path $RepoPath
+    git init
+    git add .
+    git commit -m "Initial commit with local files"
+    git branch -M main
+    git remote add origin "https://github.com/$Username/$RepoName.git"
+    git push -u origin main
+    Set-Location -Path ..
+}
+
+# List of submodules to handle
+$submodules = @(
+    @{ Name = "opentofu"; LocalPath = ".\opentofu"; Username = "wizzense" },
+    @{ Name = "TaniumLabDeployment"; LocalPath = ".\TaniumLabDeployment"; Username = "wizzense" },
+    @{ Name = "WinImaging"; LocalPath = ".\WinImaging"; Username = "wizzense" }
+)
+
+# Initialize each submodule if it doesn't exist
+foreach ($submodule in $submodules) {
+    $repoUrl = Get-RepoUrl -RepoPath $submodule.LocalPath
+
+    if (-not $repoUrl) {
+        $repoUrl = Create-GitHubRepo -Username $submodule.Username -RepoName $submodule.Name
+    }
+
+    if ($repoUrl) {
+        # Initialize the local repo if it's new and hasn't been committed yet
+        if (Test-Path "$($submodule.LocalPath)\.git" -eq $false) {
+            Initialize-Repo -RepoPath $submodule.LocalPath -Username $submodule.Username -RepoName $submodule.Name
+        }
+
+        Write-Host "Adding submodule $($submodule.Name) with URL $repoUrl..."
+        Set-Location -Path $RepoDirectory
+        git submodule add $repoUrl $submodule.Name
+        Set-Location -Path ..
+    } else {
+        Write-Host "Failed to retrieve or create the repository URL for $($submodule.Name)."
+    }
+}
+
+# Step 1: Branch Handling
 # Check if the branch already exists
 $branchExists = git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" branch --list $BranchName
 
@@ -68,7 +117,7 @@ if ($branchExists) {
     Write-Host "Branch '$BranchName' created and checked out."
 }
 
-# Step 2: Pull the latest changes from 'main' into 'dev-branch'
+# Step 2: Pull the latest changes from 'main' into the branch
 Write-Host "Pulling latest changes from 'main' into '$BranchName'..."
 git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" pull origin main
 if ($LASTEXITCODE -ne 0) {
@@ -93,7 +142,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "Changes committed with message: '$CommitMessage'."
 
-# Step 5: Push 'dev-branch' to remote repository
+# Step 5: Push the branch to the remote repository
 Write-Host "Pushing branch '$BranchName' to remote repository..."
 git.exe --git-dir "$RepoDirectory\.git" --work-tree "$RepoDirectory" push origin $BranchName
 if ($LASTEXITCODE -ne 0) {
@@ -166,5 +215,4 @@ if ($MergeToMain) {
     }
 }
 
-#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation"
-#.\GitManager.ps1 -BranchName "dev-branch" -CommitMessage "GIT CLI install automation" -MergeToMain
+Write-Host "All operations completed successfully."
