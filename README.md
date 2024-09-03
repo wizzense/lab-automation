@@ -1,5 +1,109 @@
 # Tanium Deployed Homelab
 
+- look into automating container clusters
+  
+- look into auotmatically getting isos and keys from https://my.visualstudio.com/
+
+- need to prep the isos with the autounattend files by mounting them and placing it at the top level of the iso
+  - this will make it so windows detected the file and performs the install -- can definitely automate doing this prep work
+  - https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install - need this to work on the isos
+    - look into automating download and install
+    - create C:\temp 
+      - create WindowsISO
+        - copy AutoUnattendTempalte.xml to WindowsISO
+    - mount the iso ADK is on, install, run command from: C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Oscdimg
+    - oscdimg -m -o -u2 -bC:\temp\WindowsISO\boot\etfsboot.com C:\temp\WindowsISO C:\temp\NewWindowsISO.iso
+    - Copy iso from C:\temp\NewWindowsISO.iso to 'data' drive (E:\data\).
+    - replace current iso with new one, with new name
+    - alternatively, update tofu config files with new iso name.
+  
+- look into using opentofu for Infrastructure as Code[https://opentofu.org/docs/intro/install/standalone/]
+  - Looks like opentofu is supposed to be installed on the hypervisor - so this will be interesting for installing control node vms vs vms on the lab hypervisor -- might be two layers here.
+  - <https://library.tf/providers/taliesins/hyperv/latest> -
+
+    - 
+    - tried running this on my dom with hyperv installed and then tried running the plan, but couldnt not connect, trying locally
+      - revisit this to use remote hyper-v hosts.
+
+    - [x] successfully deployed PrimaryControlNode VM with opentofu 
+      - [ ] successfully destroyed deployed infrastructure
+      - [ ] now I need to figure out the unattended installation. is this ansible, or this could be provision for other VMs -- in this case, this endpoint
+        is to become the satellite provision endpoint so i need the unattended install that way.
+        tofu init
+        tofu import hyperv_iso_image.Win11_23H2_English_x64v2 E:\Data\Win11_23H2_English_x64v2.iso
+        tofu plan -out pcn-plan.conf
+        tofu apply pcn-plan.conf
+        tofu destroy -target=hyperv_machine_instance.PrimaryControlNode
+      - [] requires prep =  need to make sure to prep hyper-v host with setup script to work with tailsins/hyperv: .\tailsins-prepare-hypervhost.ps1
+
+    - ```tofu
+
+
+          The resources that were imported are shown above. These resources are now in
+          your OpenTofu state and will henceforth be managed by OpenTofu.
+      ```
+automate handling of resources that already exist:
+
+```powershell
+PS C:\Users\alexa\OneDrive\0. Lab\opentofu\my-infra> tofu apply "pcn-plan.conf"
+hyperv_network_switch.Lan: Creating...
+hyperv_vhd.PrimaryControlNode-vhd: Creating...
+╷
+│ Error: a resource with the ID "C:\\HyperV\\VMs\\PrimaryControlNode\\PrimaryControlNode.vhdx" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "hyperv_vhd" for more information.
+│  terraform import hyperv_vhd.<resource name> C:\HyperV\VMs\PrimaryControlNode\PrimaryControlNode.vhdx
+│
+│   with hyperv_vhd.PrimaryControlNode-vhd,
+│   on tofu-vm-primarycontrolnode.tf line 2, in resource "hyperv_vhd" "PrimaryControlNode-vhd":
+│    2: resource "hyperv_vhd" "PrimaryControlNode-vhd" {
+│
+╵
+╷
+│ Error: a resource with the ID "DMZ" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "hyperv_network_switch" for more information.
+│  terraform import hyperv_network_switch.<resource name> DMZ
+│
+│   with hyperv_network_switch.Lan,
+│   on tofu-vm-primarycontrolnode.tf line 8, in resource "hyperv_network_switch" "Lan":
+│    8: resource "hyperv_network_switch" "Lan" {
+│
+
+hyperv_network_switch.Lan: Creation complete after 11s [id=DMZ]
+╷
+│ Error: a resource with the ID "C:\\HyperV\\VMs\\PrimaryControlNode\\PrimaryControlNode.vhdx" already exists - to be managed via Terraform this resource needs to be imported into the State. Please see the resource documentation for "hyperv_vhd" for more information.
+│  terraform import hyperv_vhd.<resource name> C:\HyperV\VMs\PrimaryControlNode\PrimaryControlNode.vhdx
+│
+│   with hyperv_vhd.PrimaryControlNode-vhd,
+│   on tofu-vm-primarycontrolnode.tf line 2, in resource "hyperv_vhd" "PrimaryControlNode-vhd":
+│    2: resource "hyperv_vhd" "PrimaryControlNode-vhd" {
+```
+
+- [] automate cleanup if an instance fails and is no longer recognized for whatever reason (just had to manually remove the VM and Vswitch)
+
+```tofu
+terraform {
+  required_providers {
+    hyperv = {
+      source = "taliesins/hyperv"
+      version = "1.2.1"
+    }
+  }
+}
+
+provider hyperv {
+  # Configuration options
+}
+```
+
+## Configuration options
+
+- look into using GoLang[https://go.dev/doc/install]
+- look into ansible for per endpoint configuration management (secondary to using tanium automate / enforce/ etc)
+- Look into CI/CD with GitHub Actions
+
+## Quick Start
+
+1. Download and clone the repo
+2. Run kickstart.ps1
+
 ## Guiding Principles
 
 Painstaklingly document everything
