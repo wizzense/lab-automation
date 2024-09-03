@@ -1,4 +1,7 @@
 # Tanium Deployed Homelab
+
+- Could benefit from a unified utility module to standardize logging and reduce boiler plate code/ duplicate functions w/ importable re-usable functions. Should have done this from the start. Never too later to start
+
 I've kinda got the hard part of using opentofu done. I just need to figure out the pipeline for adding new VMs/ updating VMs to the infrastructure as well as configure all of the core infrastructure .tf files. (.tf files are basically just resource definition files w/ the desired configs)
 
 And figuring out an automated/repeatable pipeline to simplify creating new deployment images.
