@@ -1,0 +1,3 @@
+[submodule "terraform-provider-hyperv"]
+	path = terraform-provider-hyperv
+	url = https://github.com/taliesins/terraform-provider-hyperv
