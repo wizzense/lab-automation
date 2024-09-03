@@ -1,112 +1,46 @@
-# Define the path to your repositories
-$repoPaths = @(
-    ".\Hyper-V-Automation",
-    ".\TaniumLabDeployment",
-    ".\terraform-provider-hyperv",
-    ".\opentofu",
-    ".\WinImaging"
-)
-
-# Check if GitHub CLI is available
-if (-not (Get-Command "gh" -ErrorAction SilentlyContinue)) {
-    Write-Error "GitHub CLI (gh) is not installed. Please install it before running this script."
-    exit 1
+# Authenticate with GitHub
+if (-not (gh auth status --hostname github.com)) {
+    Write-Host "Authenticating with GitHub..."
+    gh auth login
 }
 
-# Function to get the remote URL of the repository
-function Get-RepoDetails {
-    param (
-        [string]$RepoPath
-    )
-
-    # Navigate to the repository directory
-    Set-Location -Path $RepoPath
-
-    # Get the remote URL
-    $remoteUrl = git remote get-url origin
-
-    # Extract the owner and repository name
-    if ($remoteUrl -match "github\.com[:\/](.*)\/(.*)\.git") {
-        return @{
-            Owner = $matches[1]
-            Name = $matches[2]
-            Url = $remoteUrl
-        }
-    } else {
-        Write-Host "Unable to parse the remote URL for $RepoPath."
-        return $null
-    }
-}
-
-# Function to create a new repository on GitHub
-function Create-NewRepo {
-    param (
-        [string]$RepoName,
-        [string]$RepoPath
-    )
-
-    # Check if the repository exists on GitHub
-    $repoCheck = gh repo view $globalGitConfig/$RepoName --json name
-
-    if (-not $repoCheck) {
-        Write-Host "Repository $RepoName does not exist. Creating a new repository on GitHub..."
-        gh repo create $globalGitConfig/$RepoName --public --confirm
-    } else {
-        Write-Host "Repository $RepoName already exists on GitHub."
-    }
-
-    # Initialize the repository locally
-    Set-Location -Path $RepoPath
-    git init
-    git remote add origin "https://github.com/$globalGitConfig/$RepoName.git"
-    git add .
-    git commit -m "Initial commit"
-    git push -u origin master
-}
-
-# Retrieve the global GitHub username
-$globalGitConfig = git config --global user.name
-if (-not $globalGitConfig) {
-    $globalGitConfig = Read-Host "GitHub username not found. Please enter your GitHub username"
-    git config --global user.name $globalGitConfig
-}
-
-# Process each repository
-foreach ($repoPath in $repoPaths) {
-    if (Test-Path $repoPath) {
-        $repoDetails = Get-RepoDetails -RepoPath $repoPath
-        if ($repoDetails) {
-            Write-Host "Repository: $($repoDetails.Name)"
-            Write-Host "Owner: $($repoDetails.Owner)"
-            Write-Host "URL: $($repoDetails.Url)"
-            Write-Host "-----------------------------------"
-        }
-    } else {
-        # This is for new repositories that need to be created
-        $repoName = Split-Path $repoPath -Leaf
-        Create-NewRepo -RepoName $repoName -RepoPath $repoPath
-    }
-}
-
-# Set up submodules
-Set-Location -Path ".\tanium-homelab-automation"
-
+# Define the correct URLs for existing repositories
 $submodules = @(
     @{ Name = "Hyper-V-Automation"; Url = "https://github.com/other-username/hyper-v-automation.git" },
     @{ Name = "TaniumLabDeployment"; Url = "https://github.com/other-username/taniumlabdeployment.git" },
     @{ Name = "terraform-provider-hyperv"; Url = "https://github.com/other-username/terraform-provider-hyperv.git" },
-    @{ Name = "opentofu"; Url = "https://github.com/$globalGitConfig/opentofu.git" },
-    @{ Name = "WinImaging"; Url = "https://github.com/$globalGitConfig/WinImaging.git" }
+    @{ Name = "opentofu"; Url = "https://github.com/wizzense/opentofu.git" },
+    @{ Name = "WinImaging"; Url = "https://github.com/wizzense/WinImaging.git" }
 )
 
+# Create new repositories if they don't exist on GitHub
 foreach ($submodule in $submodules) {
-    git submodule add $submodule.Url $submodule.Name
+    if ($submodule.Owner -eq "wizzense") {
+        $repoCheck = gh repo view $submodule.Name --json name --repo "wizzense/$($submodule.Name)"
+
+        if (-not $repoCheck) {
+            Write-Host "Repository $($submodule.Name) does not exist. Creating a new repository on GitHub..."
+            gh repo create "wizzense/$($submodule.Name)" --public --confirm
+        }
+    }
 }
 
+# Add submodules to the main repo
+foreach ($submodule in $submodules) {
+    if (-not (Test-Path $submodule.Name)) {
+        Write-Host "Adding submodule $($submodule.Name)..."
+        git submodule add $submodule.Url $submodule.Name
+    }
+}
+
+# Detect the current branch
+$branchName = git rev-parse --abbrev-ref HEAD
+
 # Commit the submodule addition
+git add .
 git commit -m "Added submodules: Hyper-V-Automation, TaniumLabDeployment, terraform-provider-hyperv, opentofu, WinImaging"
 
-# Push the changes to the main repository
-git push
+# Push the changes to the current branch
+git push origin $branchName
 
 Write-Host "All repositories have been set up as submodules and initialized."
