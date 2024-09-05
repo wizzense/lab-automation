@@ -47,25 +47,61 @@ if (Get-Command gh -ErrorAction SilentlyContinue) {
     Write-Host "GitHub CLI installer removed."
 }
 
-# Check if Visual Studio Code is installed
-Write-Host "Checking if Visual Studio Code is installed..."
-$vscodePath = "C:\Users\alexa\AppData\Local\Programs\Microsoft VS Code\Code.exe"
-if (Test-Path $vscodePath) {
-    Write-Host "Visual Studio Code is already installed."
-} else {
-    Write-Host "Visual Studio Code is not installed. Downloading VSCode installer from $($config.VSCodeInstallerUrl)..."
-    $vscodeInstaller = Join-Path -Path $env:TEMP -ChildPath "VSCodeInstaller.exe"
-    Invoke-WebRequest -Uri $config.VSCodeInstallerUrl -OutFile $vscodeInstaller -Verbose
-    Write-Host "VSCode installer downloaded to $vscodeInstaller."
+# Function to check if a specific product is installed (can probably use this for future parts of the project for hypervisors or smth)
+function Test-ProductInstalled {
+    param (
+        [string[]]$productNames
+    )
 
-    Write-Host "Installing Visual Studio Code..."
-    Start-Process -FilePath $vscodeInstaller -ArgumentList "/VERYSILENT" -Wait
-    Write-Host "VSCode installation completed."
+    #Write-Host "Checking for the following product names: $($productNames -join ', ')"
 
-    Remove-Item -Path $vscodeInstaller
-    Write-Host "VSCode installer removed."
+    $installedApps = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* |
+        Select-Object DisplayName, InstallLocation
+    $installedApps += Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* |
+        Select-Object DisplayName, InstallLocation
+
+    #Write-Host "Installed applications:"
+    #$installedApps | ForEach-Object { Write-Host "DisplayName: $($_.DisplayName), InstallLocation: $($_.InstallLocation)" }
+
+    foreach ($productName in $productNames) {
+        #Write-Host "Checking for product name: $productName"
+        $product = $installedApps | Where-Object { $_.DisplayName -like "*$productName*" }
+        if ($null -ne $product) {
+            #Write-Host "Found product: $productName"
+            return $true
+        }
+    }
+
+    #Write-Host "Product not found."
+    return $false
 }
 
+
+# Check if Visual Studio Code is installed
+Write-Host "Checking if Visual Studio Code is installed..."
+#$vscodePath = "C:\Users\alexa\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+$productNames = @("Visual Studio Code", "Microsoft Visual Studio Code")
+if (Test-ProductInstalled -productNames $productNames) {
+    Write-Host "Visual Studio Code is already installed."
+} else{ #check common user-specific installation path
+    $vscodePath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Microsoft VS Code\Code.exe"
+    if(Test-Path $vscodePath) {
+        Write-Host "Visual Studio Code is already installed."
+    }
+    else {
+        Write-Host "Visual Studio Code is not installed. Downloading VSCode installer from $($config.VSCodeInstallerUrl)..."
+        $vscodeInstaller = Join-Path -Path $env:TEMP -ChildPath "VSCodeInstaller.exe"
+        Invoke-WebRequest -Uri $config.VSCodeInstallerUrl -OutFile $vscodeInstaller -Verbose
+        Write-Host "VSCode installer downloaded to $vscodeInstaller."
+
+        Write-Host "Installing Visual Studio Code..."
+        Start-Process -FilePath $vscodeInstaller -ArgumentList "/VERYSILENT" -Wait
+        Write-Host "VSCode installation completed."
+
+        Remove-Item -Path $vscodeInstaller
+        Write-Host "VSCode installer removed."
+}
+}
 # Capture existing VSCode processes
 $existingVSCodeProcesses = Get-Process -Name "Code" -ErrorAction SilentlyContinue
 
