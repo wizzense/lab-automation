@@ -30,7 +30,8 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 
 # Check if GitHub CLI is installed
 Write-Host "Checking if GitHub CLI is installed..."
-if (Get-Command gh -ErrorAction SilentlyContinue) {
+$ghCommand = Get-Command -Name gh -ErrorAction SilentlyContinue
+if ($ghCommand) {
     Write-Host "GitHub CLI is already installed."
 } else {
     Write-Host "GitHub CLI is not installed. Downloading GitHub CLI installer from $($config.GitHubCLIInstallerUrl)..."
