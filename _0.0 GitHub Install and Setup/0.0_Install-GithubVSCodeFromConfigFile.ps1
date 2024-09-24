@@ -127,6 +127,8 @@ foreach ($process in $newVSCodeProcesses) {
 Write-Host "New VSCode windows closed."
 
 # Clone Git Repository
+#going to try to get localpath as an env variable dynamically rather than from the config json
+$config.LocalPath = [System.IO.Path]::Combine($env:USERPROFILE, "Documents", "0. Lab")
 Write-Host "Checking if the local path '$($config.LocalPath)' exists..."
 if (-not (Test-Path -Path $config.LocalPath)) {
     Write-Host "Local path does not exist. Creating directory..."
@@ -141,7 +143,7 @@ $repoPath = Join-Path -Path $config.LocalPath -ChildPath $repoFolderName
 
 if (-not (Test-Path -Path $repoPath)) {
     Write-Host "Repository does not exist. Cloning repository from $($config.RepoUrl)..."
-    git clone $config.RepoUrl
+    git clone $config.RepoUrl $repoPath
     Write-Host "Repository cloned to $repoPath."
 } else {
     Write-Host "Repository already exists at $repoPath. Skipping clone."
