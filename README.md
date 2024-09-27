@@ -1,5 +1,8 @@
 # Tanium Deployed Homelab
+## Homelab. Orchestrated. Automated.
+
 ###  note: turn this into issues/features/to-do and wiki
+
 
 - Could benefit from a unified utility module to standardize logging and reduce boiler plate code/ duplicate functions w/ importable re-usable functions. Should have done this from the start. Never too later to start
 
