@@ -22,8 +22,8 @@ function Test-IsAdmin {
 
 # Check for administrative privileges
 if (-Not (Test-IsAdmin)) {
-    Write-Log "This script requires elevated privileges. Restarting as administrator..."
-    Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    Write-Log "This script requires elevated privileges. Restart as administrator..."
+
     exit
 }
 
