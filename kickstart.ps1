@@ -1,12 +1,6 @@
 # Enable Verbose output
 $VerbosePreference = "Continue"
 
-# Define parameters
-[CmdletBinding()]
-param(
-    [switch]$Clean
-)
-
 # Define the log file path
 $logFilePath = Join-Path -Path $PSScriptRoot -ChildPath "kickstart_log.txt"
 
@@ -23,20 +17,14 @@ function Write-Log {
 # Function to check if running as administrator
 function Test-IsAdmin {
     $currentUser = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-    return $currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
+    $currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
 
-# Function to check if the script is run from the GUI
-function Test-IsGUI {
-    return -not $Host.Name -eq 'ConsoleHost'
-}
-
-# Function to refresh environment variables
-function Refresh-EnvironmentVariables {
-    Write-Log "Refreshing environment variables..."
-    # Refresh the PATH variable
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-    Write-Log "Environment variables refreshed."
+# Check for administrative privileges
+if (-Not (Test-IsAdmin)) {
+    Write-Log "This script requires elevated privileges. Restarting as administrator..."
+    Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
 
 # Function to install Git
@@ -72,9 +60,6 @@ function Install-Git {
             Remove-Item -Path $gitInstaller -Force
             Write-Log "Git installer removed."
 
-            # Refresh environment variables
-            Refresh-EnvironmentVariables
-
             # Configure Git (Optional)
             # You can set default username and email here if desired
             # git config --global user.name "YourName"
@@ -82,40 +67,125 @@ function Install-Git {
 
         } else {
             Write-Log "Could not find a 64-bit Git installer. Exiting."
-            $global:ScriptError = $true
             exit 1
         }
     } catch {
         Write-Log "Error installing Git: $_"
-        $global:ScriptError = $true
         exit 1
     }
 }
 
-# ... [Other functions remain unchanged, but ensure all exit paths set $global:ScriptError if an error occurs] ...
+# Function to download and install Python
+function Install-Python {
+    Write-Log "Python is not installed. Downloading Python installer..."
 
-# Function to prompt for the repository URL
-function Get-RepositoryUrl {
-    # Prompt for the repository URL
-    $repoUrl = Read-Host -Prompt "Please enter the repository URL"
+    # Define the Python installer URL and local path
+    $pythonInstallerUrl = "https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe"  # Replace with the desired version
+    $pythonInstaller = Join-Path -Path $env:TEMP -ChildPath "python-installer.exe"
 
-    # Validate the URL
-    if ([string]::IsNullOrWhiteSpace($repoUrl)) {
-        Write-Log "Repository URL is required. Exiting."
-        $global:ScriptError = $true
+    # Download the Python installer
+    try {
+        Invoke-WebRequest -Uri $pythonInstallerUrl -OutFile $pythonInstaller -UseBasicParsing -Verbose
+        Write-Log "Python installer downloaded to $pythonInstaller."
+    } catch {
+        Write-Log "Error downloading Python installer: $_"
         exit 1
     }
 
-    return $repoUrl
+    # Install Python silently
+    Write-Log "Installing Python silently..."
+    try {
+        Start-Process -FilePath $pythonInstaller -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1 Include_test=0" -Wait
+        Write-Log "Python installation completed."
+    } catch {
+        Write-Log "Error installing Python: $_"
+        exit 1
+    }
+
+    # Remove the installer
+    Remove-Item -Path $pythonInstaller -Force
+    Write-Log "Python installer removed."
+}
+
+# Function to check if Python is installed
+function Check-Python {
+    Write-Log "Checking if Python is installed..."
+
+    $pythonInstalled = $false
+    # Check common installation paths
+    $pythonPaths = @(
+        "$env:LOCALAPPDATA\Programs\Python\Python*",  # User-specific installations
+        "C:\Python*",                                  # Custom installations
+        "$env:ProgramFiles\Python*",                   # 64-bit installations
+        "$env:ProgramFiles(x86)\Python*"               # 32-bit installations
+    )
+
+    foreach ($path in $pythonPaths) {
+        if (Test-Path -Path $path) {
+            $pythonInstalled = $true
+            break
+        }
+    }
+
+    if ($pythonInstalled -or (Get-Command python -ErrorAction SilentlyContinue)) {
+        Write-Log "Python is already installed."
+    } else {
+        Install-Python
+    }
+}
+
+# Function to run the Python controller script
+function Run-Controller {
+    Write-Log "Running the Python controller script..."
+
+    $controllerScript = Join-Path -Path $PSScriptRoot -ChildPath "controller.py"
+
+    if (-not (Test-Path -Path $controllerScript)) {
+        Write-Log "Controller script not found at $controllerScript. Exiting."
+        exit 1
+    }
+
+    try {
+        # Use the full path to the python executable
+        $pythonExe = Get-Command python | Select-Object -ExpandProperty Source
+
+        $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+        $processInfo.FileName = $pythonExe
+        $processInfo.Arguments = "`"$controllerScript`""
+        $processInfo.RedirectStandardOutput = $true
+        $processInfo.RedirectStandardError = $true
+        $processInfo.UseShellExecute = $false
+        $processInfo.CreateNoWindow = $true
+
+        $process = New-Object System.Diagnostics.Process
+        $process.StartInfo = $processInfo
+        $process.Start() | Out-Null
+
+        $output = $process.StandardOutput.ReadToEnd()
+        $errorOutput = $process.StandardError.ReadToEnd()
+
+        $process.WaitForExit()
+
+        if ($process.ExitCode -eq 0) {
+            Write-Log "Controller script executed successfully."
+            Write-Log $output
+        } else {
+            Write-Log "Controller script failed with exit code $($process.ExitCode)."
+            Write-Log $errorOutput
+            exit $process.ExitCode
+        }
+    } catch {
+        Write-Log "Error running controller script: $_"
+        exit 1
+    }
 }
 
 # Function to clone the repository
 function Clone-Repository {
     Write-Log "Cloning the repository..."
 
-    # Get the repository URL
-    $repoUrl = Get-RepositoryUrl
-
+    # Define the repository URL and clone path
+    $repoUrl = "https://github.com/YourUsername/YourRepository.git"  # Replace with your repository URL
     $clonePath = $PSScriptRoot  # Clone into the current script directory
 
     if (-not (Test-Path -Path (Join-Path -Path $clonePath -ChildPath ".git"))) {
@@ -125,7 +195,6 @@ function Clone-Repository {
             Write-Log "Repository cloned to $clonePath."
         } catch {
             Write-Log "Error cloning repository: $_"
-            $global:ScriptError = $true
             exit 1
         }
     } else {
@@ -136,77 +205,28 @@ function Clone-Repository {
             Set-Location $PSScriptRoot
         } catch {
             Write-Log "Error pulling latest changes: $_"
-            $global:ScriptError = $true
             exit 1
         }
     }
 }
 
-# ... [Rest of the script remains unchanged] ...
-
-# Modify the elevation code to keep the window open if run from the GUI
-# Check for administrative privileges
-if (-Not (Test-IsAdmin)) {
-    Write-Log "This script requires elevated privileges. Restarting as administrator..."
-    $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
-
-    # If run from GUI, keep the window open
-    if (Test-IsGUI) {
-        $arguments = "-NoExit " + $arguments
-    }
-
-    Start-Process -FilePath "powershell.exe" -ArgumentList $arguments -Verb RunAs
-    exit
-}
-
 # Main Execution
 Write-Log "Starting kickstart script..."
 
-$global:ScriptError = $false  # Flag to check if an error occurred
-
-try {
-    if ($Clean) {
-        Write-Log "Clean parameter specified. Performing cleanup..."
-
-        # Uninstall components
-        Uninstall-Git
-        Uninstall-Python
-        Remove-Repository
-
-        Write-Log "Cleanup completed successfully."
-    } else {
-        # Check if Git is installed (needed to clone the repository)
-        if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-            Install-Git
-        } else {
-            Write-Log "Git is already installed."
-            # Refresh environment variables in case Git was installed but not recognized
-            Refresh-EnvironmentVariables
-        }
-
-        # Clone the repository
-        Clone-Repository
-
-        # Check and install Python
-        Check-Python
-
-        # Run the controller script
-        Run-Controller
-
-        Write-Log "Kickstart script completed successfully."
-    }
-} catch {
-    Write-Log "An unexpected error occurred: $_"
-    $global:ScriptError = $true
+# Check if Git is installed (needed to clone the repository)
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    Install-Git
+} else {
+    Write-Log "Git is already installed."
 }
 
-# If run from the GUI, wait for user input before exiting
-if (Test-IsGUI) {
-    if ($global:ScriptError) {
-        Write-Host "An error occurred during execution. Please check the log file at $logFilePath."
-    } else {
-        Write-Host "Script completed successfully."
-    }
-    Write-Host "Press Enter to exit..."
-    Read-Host
-}
+# Clone the repository
+Clone-Repository
+
+# Check and install Python
+Check-Python
+
+# Run the controller script
+Run-Controller
+
+Write-Log "Kickstart script completed successfully."
