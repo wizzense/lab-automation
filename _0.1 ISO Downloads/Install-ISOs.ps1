@@ -24,8 +24,9 @@ function Get-ISOFolder {
 $isoFolder = Get-ISOFolder
 
 # Read JSON file
-$isoList = Get-Content -Path "C:\Users\jake.martin\Documents\Personal\tanium-homelab-automation\_0.1 ISO Downloads\isos.json" | ConvertFrom-Json
-
+$currentDir = Get-Location
+$jsonFilePath = Join-Path -Path $currentDir -ChildPath ".\_0.1 ISO Downloads\isos.json"
+$isoList = Get-Content -Path $jsonFilePath | ConvertFrom-Json
 # Download ISO files
 foreach ($iso in $isoList) {
     try {
