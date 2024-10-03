@@ -114,7 +114,9 @@ function Install-VSCodeExtensions {
 # Function to clone Git repository
 function Clone-GitRepository {
     try {
+        $config.LocalPath = [System.IO.Path]::Combine($env:USERPROFILE, "Documents", "0. Lab")
         $localPath = $config.LocalPath
+        
         Write-Verbose "Checking if the local path '$localPath' exists..."
         if (-not (Test-Path -Path $localPath)) {
             Write-Verbose "Local path does not exist. Creating directory..."
