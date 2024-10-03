@@ -9,63 +9,62 @@ if (-Not (Test-IsAdmin)) {
     Write-Warning "This script requires elevated privileges. Attempting to restart as administrator..."
 
     # Re-launch the script with elevated privileges
-    $newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList ("-NoProfile -ExecutionPolicy Bypass -File `"" + $MyInvocation.MyCommand.Path + "`"") -Verb RunAs -PassThru
-
-    # Wait for the new process to exit
-    $newProcess.WaitForExit()
-
-    # Exit the current process
+    Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
     exit
 }
 
-# Place your script's main code here
-Write-Host "Running with elevated privileges. Proceeding with script execution."
+# Enable Verbose output
+$VerbosePreference = "Continue"
 
-# Function to uninstall Git
-function Uninstall-Git {
-    $gitUninstallPath = "C:\Program Files\Git\unins000.exe"
-    
-    if (Test-Path $gitUninstallPath) {
-        Write-Host "Uninstalling Git..."
-        Start-Process -FilePath $gitUninstallPath -ArgumentList "/SILENT" -Wait
-        Write-Host "Git uninstallation completed."
-    } else {
-        Write-Host "Git is not installed or the uninstaller was not found."
+Write-Verbose "Running with elevated privileges. Proceeding with script execution."
+
+# Function to uninstall applications
+function Uninstall-Application {
+    param (
+        [string]$appName
+    )
+
+    $uninstallPaths = @(
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    )
+
+    $found = $false
+
+    foreach ($path in $uninstallPaths) {
+        $apps = Get-ItemProperty $path -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like "*$appName*" }
+        foreach ($app in $apps) {
+            if ($app.UninstallString) {
+                Write-Verbose "Uninstalling $($app.DisplayName)..."
+                $uninstallCmd = $app.UninstallString
+
+                # Handle different uninstall command formats
+                if ($uninstallCmd -like "msiexec*") {
+                    $arguments = $uninstallCmd.Substring($uninstallCmd.IndexOf("msiexec") + 7)
+                    Start-Process -FilePath "msiexec.exe" -ArgumentList "$arguments /quiet /norestart" -Wait
+                } else {
+                    Start-Process -FilePath $uninstallCmd -ArgumentList "/SILENT" -Wait
+                }
+
+                Write-Verbose "$($app.DisplayName) uninstalled."
+                $found = $true
+            }
+        }
+    }
+
+    if (-not $found) {
+        Write-Verbose "Application $appName not found or already uninstalled."
     }
 }
 
-# Function to uninstall Visual Studio Code
-# doesn't work, but that's okay, kind of don't want it to yet
-function Uninstall-VSCode {
-    # Check the user-specific installation directory under LOCALAPPDATA
-    $vscodeInstallDir = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Microsoft VS Code"
-    $vscodeUninstaller = Join-Path -Path $vscodeInstallDir -ChildPath "unins000.exe"
-    
-    if (Test-Path $vscodeUninstaller) {
-        Write-Host "Uninstalling Visual Studio Code from $vscodeInstallDir..."
-        Start-Process -FilePath $vscodeUninstaller -ArgumentList "/silent" -Wait
-        Write-Host "Visual Studio Code uninstallation completed."
-    } else {
-        Write-Host "Uninstaller not found in the installation directory $vscodeInstallDir."
-    }
-}
+# Uninstall Git
+Uninstall-Application -appName "Git"
 
-# Function to remove GitHub CLI
-function Remove-GitHubCLI {
-    $ghPath = "C:\Program Files\GitHub CLI\gh.exe"
-    
-    if (Test-Path $ghPath) {
-        Write-Host "Removing GitHub CLI..."
-        Remove-Item -Path $ghPath -Force
-        Write-Host "GitHub CLI removal completed."
-    } else {
-        Write-Host "GitHub CLI is not installed or the path was not found."
-    }
-}
+# Uninstall Visual Studio Code
+Uninstall-Application -appName "Visual Studio Code"
 
-# Run the uninstallation/removal functions
-Uninstall-Git
-Uninstall-VSCode
-Remove-GitHubCLI
+# Uninstall GitHub CLI
+Uninstall-Application -appName "GitHub CLI"
 
-Write-Host "Uninstallation/removal process completed."
+Write-Host "Uninstallation process completed."
