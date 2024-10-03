@@ -1,3 +1,6 @@
 [submodule "terraform-provider-hyperv"]
 	path = terraform-provider-hyperv
 	url = https://github.com/taliesins/terraform-provider-hyperv
+[submodule "opentofu"]
+	path = opentofu
+	url = https://github.com/wizzense/opentofu
