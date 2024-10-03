@@ -1,0 +1,26 @@
+Writing my thoughts in pseudocode dont mind me
+
+
+
+
+Next Steps?
+    Install OpenTofu on the system - will probably want to automate this w script?
+    Create a config file (.tf extension) to define the infrastructure. Maybe look something like this?
+
+provider "hyperv" {
+  # Configuration for the Hyper-V provider
+}
+
+resource "hyperv_virtual_machine" "tanium_vm" {
+  name             = "tanium-vm"
+  memory           = 2048
+  virtual_processors = 2
+  vhd_path         = "C:\\path\\to\\your\\vm\\image.vhdx"
+  switch_name      = "Default Switch"
+  iso_path           = "C:\\path\\to\\your\\iso\\image.iso"  # Path to the ISO file? Not certain how it works
+}
+
+
+would probably feed it iso files we downloaded previously
+
+Could maybe use cloud.init to automate the configuration of VMs after provisioned by OpenTofu
