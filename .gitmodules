@@ -4,3 +4,6 @@
 [submodule "opentofu"]
 	path = opentofu
 	url = https://github.com/wizzense/opentofu
+[submodule "opentofu-homelab"]
+	path = opentofu-homelab
+	url = https://github.com/wizzense/opentofu-homelab
